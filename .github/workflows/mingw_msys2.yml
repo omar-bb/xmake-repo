@@ -25,7 +25,7 @@ jobs:
           msystem: ${{ matrix.msystem }}
           install: git base-devel unzip mingw-w64-${{ matrix.arch }}-toolchain
           update: true
-
+ 
       - name: Prepare
         shell: msys2 {0}
         run: |
