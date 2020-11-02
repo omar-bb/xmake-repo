@@ -14,7 +14,8 @@ package("m4")
         add_patches("1.4.18", path.join(os.scriptdir(), "patches", "1.4.18", "secure_snprintf.patch"), "c0a408fbffb7255fcc75e26bd8edab116fc81d216bfd18b473668b7739a4158e")
     end
 
-    on_install("@macosx", "@linux", function (package)
+    on_install("@macosx", "@linux", "@windows", function (package)
+        assert(not is_host("windows") or is_subhost("msys"))
         import("package.tools.autoconf").install(package, {"--disable-dependency-tracking"})
     end)
 
