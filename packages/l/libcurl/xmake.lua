@@ -25,10 +25,12 @@ package("libcurl")
 
     on_install("windows", function (package)
         local configs = {"-DBUILD_TESTING=OFF"}
+        table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
+        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
         import("package.tools.cmake").install(package, configs)
     end)
 
-    on_install("macosx", "linux", "iphoneos", function (package)
+    on_install("macosx", "linux", "iphoneos", "android", "mingw", "cross", function (package)
         local configs = {"--disable-silent-rules", "--disable-dependency-tracking"}
         if package:debug() then
             table.insert(configs, "--enable-debug")
