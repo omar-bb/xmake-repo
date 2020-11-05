@@ -13,7 +13,7 @@ package("libcurl")
 
     if is_plat("linux") then
         add_deps("openssl")
-    elseif is_plat("windows") then
+    elseif is_plat("windows", "mingw") then
         add_deps("cmake")
     end
 
@@ -23,14 +23,14 @@ package("libcurl")
         add_syslinks("pthread")
     end
 
-    on_install("windows", function (package)
+    on_install("windows", "mingw", function (package)
         local configs = {"-DBUILD_TESTING=OFF"}
         table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
         table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
         import("package.tools.cmake").install(package, configs)
     end)
 
-    on_install("macosx", "linux", "iphoneos", "android", "mingw", "cross", function (package)
+    on_install("macosx", "linux", "iphoneos", "android", "cross", function (package)
         local configs = {"--disable-silent-rules", "--disable-dependency-tracking"}
         if package:debug() then
             table.insert(configs, "--enable-debug")
